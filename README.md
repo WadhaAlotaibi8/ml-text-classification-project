@@ -31,7 +31,7 @@ ml-text-classification-project/
 ├── results/
 ├── README.md
 └── .gitignore
-
+```
 
 ## Project Description:
 This project performs text classification using a compression-based KNN approach instead of a neural network.
