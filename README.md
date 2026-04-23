@@ -108,7 +108,7 @@ Main Arguments:
 
 
 
-Extension Added:
+## Extension Added:
 Compared to the original repository, this version adds:
 - Precision
 - Recall
@@ -119,14 +119,15 @@ Compared to the original repository, this version adds:
 
 These additions make the evaluation more complete and easier to include in the report.
 
-Dataset Notes:
+## Dataset Notes:
 The project structure supports multiple datasets, but some older dataset download links may fail because of outdated sources or compatibility issues.
 
 
-Authors:
+## Authors:
 - Wadhhaa Alotaibi
 - Soukiana Alwosaibea
 
-Reference:
+## Reference:
 This project is based on:
 Low-Resource Text Classification: A Parameter-Free Classification Method with Compressors
+
