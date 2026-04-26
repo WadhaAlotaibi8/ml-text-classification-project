@@ -1,0 +1,4 @@
+Method,Dataset,Train/Class,Test/Class,Accuracy,Precision,Recall,F1
+TF-IDF + Logistic Regression,AG_NEWS,20,20,0.6375,0.6370,0.6375,0.6236
+TF-IDF + Naive Bayes,AG_NEWS,20,20,0.6375,0.6353,0.6375,0.6271
+TF-IDF + SVM,AG_NEWS,20,20,0.6250,0.6206,0.6250,0.6112

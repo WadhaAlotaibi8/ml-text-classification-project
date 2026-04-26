@@ -1,0 +1,2 @@
+Method,Dataset,Train/Class,Test/Class,Accuracy,Precision,Recall,F1
+TF-IDF + Naive Bayes,AG_NEWS,20,20,0.5875,0.6200,0.5875,0.5833

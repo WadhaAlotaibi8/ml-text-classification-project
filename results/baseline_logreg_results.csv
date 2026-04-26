@@ -1,0 +1,2 @@
+Method,Dataset,Train/Class,Test/Class,Accuracy,Precision,Recall,F1
+TF-IDF + Logistic Regression,AG_NEWS,20,20,0.6500,0.6471,0.6500,0.6382

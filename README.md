@@ -11,6 +11,10 @@ The goal of this project is to reproduce the original compression-based text cla
 - Confusion Matrix
 - Classification Report
 - Saving experiment results into the `results` folder
+- Comparison with traditional baselines:
+  - TF-IDF + Logistic Regression
+  - TF-IDF + Naive Bayes
+  - TF-IDF + SVM
 
 ---
 
@@ -23,11 +27,11 @@ ml-text-classification-project/
 │   ├── data.py
 │   ├── experiments.py
 │   ├── main_text.py
+│   ├── baseline_models.py
 │   ├── requirements.txt
-│   ├──utils.py
+│   ├── utils.py
 │   └── data/
 │       └── datasets/
-│                           
 ├── results/
 ├── README.md
 └── .gitignore
@@ -43,6 +47,11 @@ The workflow is:
 - Predict the class label using K-nearest neighbors
 - Print evaluation results
 - Save the results into the results folder
+In addition to the original compression-based method, this project also includes traditional machine learning baselines using TF-IDF features with:
+
+-Logistic Regression
+-Naive Bayes
+-SVM
 
 ## Environment:
 This project was tested using:
@@ -116,8 +125,11 @@ Compared to the original repository, this version adds:
 - Confusion Matrix
 - Classification Report
 - Saving evaluation results to a file in the results folder
-
-These additions make the evaluation more complete and easier to include in the report.
+- Traditional baseline comparison using:
+    -TF-IDF + Logistic Regression
+    -TF-IDF + Naive Bayes
+    -TF-IDF + SVM
+    
 
 ## Dataset Notes:
 The project structure supports multiple datasets, but some older dataset download links may fail because of outdated sources or compatibility issues.
@@ -125,7 +137,7 @@ The project structure supports multiple datasets, but some older dataset downloa
 
 ## Authors:
 - Wadhhaa Alotaibi
-- Soukiana Alwosaibea
+- Soukiana Alwosaibae
 
 ## Reference:
 This project is based on:
