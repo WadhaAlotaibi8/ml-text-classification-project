@@ -157,7 +157,6 @@ def load_ohsumed_single(local_directory: str) -> tuple:
     def process(data_directory: str) -> list:
         dataset = []
 
-        # TODO: Replace with `glob` to crawl files into a list.
         for directory_name in os.listdir(data_directory):
             subdirectory_path = os.path.join(data_directory, directory_name)
             if os.path.isdir(subdirectory_path):
@@ -284,7 +283,11 @@ def load_kinnews_kirnews(
             pairs.append((label, title + " " + content))
         return pairs
 
-    ds = load_dataset(dataset_name, data_split)
+    ds = load_dataset(
+        dataset_name,
+        data_split,
+        keep_in_memory=True,
+    )
     train_ds, test_ds = process(ds["train"]), process(ds["test"])
     return train_ds, test_ds
 
@@ -305,7 +308,10 @@ def load_swahili() -> tuple:
             pairs.append((label, text))
         return pairs
 
-    ds = load_dataset("swahili_news")
+    ds = load_dataset(
+        "swahili_news",
+        keep_in_memory=True,
+    )
     train_ds, test_ds = process(ds["train"]), process(ds["test"])
     return train_ds, test_ds
 
@@ -425,12 +431,13 @@ def pick_n_sample_from_each_class(
         class2count[class_] = len(label2text[class_])
 
     for c in class2count:
-        select_idx = np.random.choice(class2count[c], size=n_samples, replace=False)
+        current_n = min(n_samples, class2count[c])
+        select_idx = np.random.choice(class2count[c], size=current_n, replace=False)
         select_text = np.array(label2text[c])[select_idx]
         select_text_idx = np.array(label2idx[c])[select_idx]
         recorded_idx += list(select_text_idx)
         result += list(select_text)
-        labels += [c] * n_samples
+        labels += [c] * current_n
 
     if idx_only:
         return recorded_idx
@@ -474,12 +481,13 @@ def pick_n_sample_from_each_class_given_dataset(
         class2count[cl] = len(label2text[cl])
 
     for c in class2count:
-        select_idx = np.random.choice(class2count[c], size=n_samples, replace=False)
+        current_n = min(n_samples, class2count[c])
+        select_idx = np.random.choice(class2count[c], size=current_n, replace=False)
         select_text = np.array(label2text[c])[select_idx]
         select_text_idx = np.array(label2idx[c])[select_idx]
         recorded_idx += list(select_text_idx)
         result += list(select_text)
-        labels += [c] * n_samples
+        labels += [c] * current_n
 
     if output_filename is not None:
         np.save(output_filename, np.array(recorded_idx))
@@ -510,7 +518,7 @@ def pick_n_sample_from_each_class_img(
     class2count = {}
     result = []
     labels = []
-    recorded_idx = []  # for replication
+    recorded_idx = []
     for i, pair in enumerate(dataset):
         img, label = pair
         if flatten:
@@ -522,12 +530,13 @@ def pick_n_sample_from_each_class_img(
         class2count[cl] = len(label2img[cl])
 
     for c in class2count:
-        select_idx = np.random.choice(class2count[c], size=n_samples, replace=False)
+        current_n = min(n_samples, class2count[c])
+        select_idx = np.random.choice(class2count[c], size=current_n, replace=False)
         select_img = np.array(label2img[c])[select_idx]
         select_img_idx = np.array(label2idx[c])[select_idx]
         recorded_idx += list(select_img_idx)
         result += list(select_img)
-        labels += [c] * n_samples
+        labels += [c] * current_n
     return result, labels, recorded_idx
 
 

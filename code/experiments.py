@@ -9,6 +9,10 @@ from compressors import DefaultCompressor
 from tqdm import tqdm
 
 
+def quiet_tqdm(iterable, *args, **kwargs):
+    return tqdm(iterable, *args, disable=True, **kwargs)
+
+
 class KnnExpText:
     def __init__(
         self,
@@ -27,22 +31,13 @@ class KnnExpText:
         """
         Calculates the distance between either `data` and itself or `data` and
         `train_data` and appends the distance to `self.distance_matrix`.
-
-        Arguments:
-            data (list): Data to compute distance between.
-            train_data (list): [Optional] Training data to compute distance from `data`.
-            fast (bool): [Optional] Uses the _fast compression length function
-                                    of `self.compressor`.
-
-        Returns:
-            None: None
         """
 
         data_to_compare = data
         if train_data is not None:
             data_to_compare = train_data
 
-        for i, t1 in tqdm(enumerate(data)):
+        for i, t1 in quiet_tqdm(enumerate(data)):
             distance4i = []
             if fast:
                 t1_compressed = self.compressor.get_compressed_len_fast(t1)
@@ -71,27 +66,18 @@ class KnnExpText:
         """
         Calculates the distance between either `data`, `data_len`, or
         `train_data` and appends the distance to `self.distance_matrix`.
-
-        Arguments:
-            data (list): Data to compute distance between.
-            train_data (list): [Optional] Training data to compute distance from `data`.
-            fast (bool): [Optional] Uses the _fast compression length function
-                                    of `self.compressor`.
-
-        Returns:
-            None: None
         """
 
         data_to_compare = data
         if train_data is not None:
             data_to_compare = train_data
 
-        for i, t1 in tqdm(enumerate(data)):
+        for i, t1 in quiet_tqdm(enumerate(data)):
             distance4i = []
             t1_compressed = self.compressor.get_compressed_len_given_prob(
                 t1, data_len[i]
             )
-            for j, t2 in tqdm(enumerate(data_to_compare)):
+            for j, t2 in quiet_tqdm(enumerate(data_to_compare)):
                 t2_compressed = self.compressor.get_compressed_len_given_prob(
                     t2, data_len[j]
                 )
@@ -106,15 +92,7 @@ class KnnExpText:
 
     def calc_dis_single(self, t1: str, t2: str) -> float:
         """
-        Calculates the distance between `t1` and `t2` and returns
-        that distance value as a float-like object.
-
-        Arguments:
-            t1 (str): Data 1.
-            t2 (str): Data 2.
-
-        Returns:
-            float-like: Distance between `t1` and `t2`.
+        Calculates the distance between `t1` and `t2`.
         """
 
         t1_compressed = self.compressor.get_compressed_len(t1)
@@ -127,20 +105,12 @@ class KnnExpText:
 
     def calc_dis_single_multi(self, train_data: list, datum: str) -> list:
         """
-        Calculates the distance between `train_data` and `datum` and returns
-        that distance value as a float-like object.
-
-        Arguments:
-            train_data (list): Training data as a list-like object.
-            datum (str): Data to compare against `train_data`.
-
-        Returns:
-            list: Distance between `t1` and `t2`.
+        Calculates the distance between `train_data` and `datum`.
         """
 
         distance4i = []
         t1_compressed = self.compressor.get_compressed_len(datum)
-        for j, t2 in tqdm(enumerate(train_data)):
+        for j, t2 in quiet_tqdm(enumerate(train_data)):
             t2_compressed = self.compressor.get_compressed_len(t2)
             t1t2_compressed = self.compressor.get_compressed_len(
                 self.aggregation_func(datum, t2)
@@ -151,22 +121,14 @@ class KnnExpText:
 
     def calc_dis_with_vector(self, data: list, train_data: Optional[list] = None):
         """
-        Calculates the distance between `train_data` and `data` and returns
-        that distance value as a float-like object.
-
-        Arguments:
-            train_data (list): Training data as a list-like object.
-            datum (str): Data to compare against `train_data`.
-
-        Returns:
-            float-like: Distance between `t1` and `t2`.
+        Calculates the distance between `train_data` and `data`.
         """
 
         if train_data is not None:
             data_to_compare = train_data
         else:
             data_to_compare = data
-        for i, t1 in tqdm(enumerate(data)):
+        for i, t1 in quiet_tqdm(enumerate(data)):
             distance4i = []
             for j, t2 in enumerate(data_to_compare):
                 distance = self.distance_func(t1, t2)
@@ -183,18 +145,6 @@ class KnnExpText:
     ) -> tuple:
         """
         Calculates the accuracy of the algorithm.
-
-        Arguments:
-            k (int?): TODO
-            label (list): Predicted Labels.
-            train_label (list): Correct Labels.
-            provided_distance_matrix (list): Calculated Distance Matrix to use
-                                             instead of `self.distance_matrix`.
-            rand (bool): TODO
-
-        Returns:
-            tuple: predictions, and list of bools indicating prediction correctness.
-
         """
         if provided_distance_matrix is not None:
             self.distance_matrix = provided_distance_matrix
@@ -248,18 +198,7 @@ class KnnExpText:
         train_label: Optional[list] = None,
     ) -> tuple:
         """
-        Calculates the distance and the accuracy of the algorithm for data with
-        training.
-
-        Arguments:
-            k (int?): TODO
-            data (list): Data used for predictions.
-            label (list): Predicted Labels.
-            train_data (list): Training data to compare distances.
-            train_label (list): Correct Labels.
-
-        Returns:
-            tuple: predictions, and list of bools indicating prediction correctness.
+        Calculates distance and accuracy of the algorithm for data with training.
         """
         correct = []
         pred = []
@@ -275,7 +214,7 @@ class KnnExpText:
             data_to_compare = train_data
         else:
             data_to_compare = data
-        for i, t1 in tqdm(enumerate(data)):
+        for i, t1 in quiet_tqdm(enumerate(data)):
             distance4i = self.calc_dis_single_multi(data_to_compare, t1)
             sorted_idx = np.argsort(np.array(distance4i))
             pred_labels = defaultdict(int)
@@ -305,23 +244,11 @@ class KnnExpText:
         train_data: list,
         train_label: list,
         datum: str,
-        label: Any,  # int, as used in this application
+        label: Any,
     ) -> tuple:
         """
-        Calculates the distance and the accuracy of the algorithm for a single
-        datum with training.
-
-        Arguments:
-            k (int?): TODO
-            train_data (list): Training data to compare distances.
-            train_label (list): Correct Labels.
-            datum (str): Datum used for predictions.
-            label (Any): Correct label of datum.
-
-        Returns:
-            tuple: prediction, and a bool indicating prediction correctness.
+        Calculates the distance and the accuracy of the algorithm for a single datum.
         """
-        # Support multi processing - must provide train data and train label
         distance4i = self.calc_dis_single_multi(train_data, datum)
         sorted_idx = np.argpartition(np.array(distance4i), range(k))
         pred_labels = defaultdict(int)
