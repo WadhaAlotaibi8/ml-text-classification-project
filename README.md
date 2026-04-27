@@ -61,22 +61,27 @@ It is recommended to use a virtual environment.
 
 ## Installation:
 1. Clone the repository
+```text
 cd ml-text-classification-project
-
+```
 
 2. Create and activate a virtual environment
 Windows PowerShell:
+```text
 py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-
+```
 
 3. Install dependencies
+```text
 pip install -r code/requirements.txt
+``` 
 
 If needed, install these packages manually:
+```text
 pip install unidecode
 pip install "portalocker>=2.0.0"
-
+```
 
 ## How to Run the Code:
 Step 1: Open the project folder
@@ -84,13 +89,18 @@ Step 1: Open the project folder
 Step 2: Activate the virtual environment
 
 Windows PowerShell:
+```text
 .\.venv\Scripts\Activate.ps1
+```
 
 Step 3: Move to the code folder
+```text
 cd code
-
+```
 Step 4: Run the code
+```text
 python main_text.py
+```
 
 Default run:
 This uses the default settings:
@@ -101,10 +111,16 @@ This uses the default settings:
 - K: 2
 
 Example run:
+```text
 python main_text.py --dataset AG_NEWS --num_train 100 --num_test 100 --compressor gzip --k 2
+``` 
 
 Example with another dataset:
+```text
 python main_text.py --dataset kirnews --num_train 10 --num_test 10
+python main_text.py --dataset 20News
+python main_text.py --dataset swahili
+```
 
 Main Arguments:
 - --dataset : dataset name
@@ -115,6 +131,22 @@ Main Arguments:
 - --data_dir : path to the dataset folder
 - --para : enables parallel execution
 
+
+## Running the Traditional Baselines
+The file baseline_models.py runs the traditional baseline models using TF-IDF features with:
+- Logistic Regression
+- Naive Bayes
+- SVM
+
+Example on AG_NEWS
+```text
+python baseline_models.py AG_NEWS
+```
+
+Example on 20News
+```text
+python baseline_models.py 20News
+```
 
 
 ## Extension Added:
@@ -134,6 +166,14 @@ Compared to the original repository, this version adds:
 ## Dataset Notes:
 The project structure supports multiple datasets, but some older dataset download links may fail because of outdated sources or compatibility issues.
 
+## Working Datasets
+The datasets that worked successfully in this phase were:
+- AG_NEWS
+- 20News
+- kirnews
+- swahili
+
+These datasets were successfully tested with both the original compression-based method and the traditional baseline models.
 
 ## Authors:
 - Wadhhaa Alotaibi
