@@ -158,9 +158,9 @@ Compared to the original repository, this version adds:
 - Classification Report
 - Saving evaluation results to a file in the results folder
 - Traditional baseline comparison using:
-    -TF-IDF + Logistic Regression
-    -TF-IDF + Naive Bayes
-    -TF-IDF + SVM
+    - TF-IDF + Logistic Regression
+    - TF-IDF + Naive Bayes
+    - TF-IDF + SVM
     
 
 ## Dataset Notes:
