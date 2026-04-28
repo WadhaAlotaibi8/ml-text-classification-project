@@ -8,7 +8,7 @@ This project reproduces the original gzip + kNN compression-based text classific
 
 ## What This Project Does
 
-### Original Method (Reproduced)
+### Original Method
 - Computes **Normalized Compression Distance (NCD)** between texts using `gzip`
 - Classifies test examples via **k-Nearest Neighbors** (k=2 by default)
 - Requires **no training, no parameters, no tokenizer**
@@ -18,7 +18,6 @@ This project reproduces the original gzip + kNN compression-based text classific
    - Macro-averaged Precision, Recall, F1-score
    - Confusion Matrix
    - Full Classification Report
-   - Results saved automatically to `results/`
 
 2. **Traditional baseline comparison** under identical train/test splits:
    - TF-IDF + Logistic Regression
