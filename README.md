@@ -37,7 +37,9 @@ ml-text-classification-project/
 │   ├── data.py               # Dataset loading utilities
 │   ├── experiments.py        # Core experiment runner
 │   ├── utils.py              # Shared helpers
-│   └── requirements.txt
+│   ├── requirements.txt
+│   └── data/
+│       └── datasets/
 ├── results/                  # Saved evaluation outputs (auto-generated)
 ├── README.md
 └── .gitignore
