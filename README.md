@@ -45,48 +45,6 @@ ml-text-classification-project/
 
 ---
 
-## Datasets
-
-The following datasets were evaluated in this project:
-
-| Dataset | Type | Status |
-|---|---|---|
-| AG News | In-distribution | ✅ Tested |
-| 20News | In-distribution | ✅ Tested |
-| KirundiNews | Out-of-distribution (low-resource) | ✅ Tested |
-| SwahiliNews | Out-of-distribution (low-resource) | ✅ Tested |
-| DBpedia, YahooAnswers, Ohsumed, R8, R52, SogouNews, DengueFilipino | Various | ⚠️ Loader compatibility issues |
-
-> Some datasets from the original paper could not be loaded due to outdated download links or Hugging Face caching issues.
-
----
-
-## Results Summary
-
-All experiments use a balanced per-class sampling strategy. Metrics are macro-averaged.
-
-### AG News (100 train / 100 test per class)
-
-| Method | Accuracy | Precision | Recall | F1-score |
-|---|---|---|---|---|
-| **gzip + kNN** | **0.6500** | **0.6572** | **0.6500** | **0.6502** |
-| TF-IDF + Logistic Regression | 0.6375 | 0.6351 | 0.6375 | 0.6327 |
-| TF-IDF + Naive Bayes | 0.6000 | 0.5936 | 0.6000 | 0.5918 |
-| TF-IDF + SVM | 0.6375 | 0.6358 | 0.6375 | 0.6347 |
-
-### 20News (20 train / 20 test per class)
-
-| Method | Accuracy | Precision | Recall | F1-score |
-|---|---|---|---|---|
-| gzip + kNN | — | — | — | — |
-| TF-IDF + Logistic Regression | 0.5975 | 0.6284 | 0.5975 | 0.5952 |
-| TF-IDF + Naive Bayes | 0.4950 | 0.6715 | 0.4950 | 0.5004 |
-| **TF-IDF + SVM** | **0.6250** | **0.6323** | **0.6250** | **0.6175** |
-
-> KirundiNews and SwahiliNews results are saved in `results/`. Sample sizes were reduced to match the minimum available class size.
-
----
-
 ## Setup & Installation
 
 **Requirements:** Python 3.11
@@ -156,14 +114,22 @@ python baseline_models.py swahili
 
 Results are saved automatically to `results/`.
 
+
 ---
 
-## Key Findings
+## Datasets
 
-- On **AG News**, gzip + kNN outperforms all three traditional baselines, showing compression-based similarity captures topical signal effectively in small-sample settings without any feature engineering.
-- On **20News** (20 categories), SVM is the strongest baseline, benefiting from TF-IDF's high-dimensional sparse representation and margin-based boundaries over many classes.
-- On **low-resource languages** (KirundiNews, SwahiliNews), gzip + kNN is language-agnostic — it needs no tokenizer or vocabulary — which is an advantage over TF-IDF-based methods.
-- Extended evaluation metrics (precision, recall, F1) reveal per-class performance differences that accuracy alone conceals.
+The following datasets were evaluated in this project:
+
+| Dataset | Type | Status |
+|---|---|---|
+| AG News | In-distribution |  Tested |
+| 20News | In-distribution |  Tested |
+| KirundiNews | Out-of-distribution (low-resource) |  Tested |
+| SwahiliNews | Out-of-distribution (low-resource) |  Tested |
+| DBpedia, YahooAnswers, Ohsumed, R8, R52, SogouNews, DengueFilipino | Various |  Loader compatibility issues |
+
+> Some datasets from the original paper could not be loaded due to outdated download links or Hugging Face caching issues.
 
 ---
 
