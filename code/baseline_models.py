@@ -24,7 +24,11 @@ from data import (
     pick_n_sample_from_each_class_given_dataset,
     pick_n_sample_from_each_class,
 )
+import random
+import numpy as np
 
+random.seed(42)
+np.random.seed(42)
 
 def normalize_dataset_name(dataset_name):
     name_map = {
