@@ -45,114 +45,109 @@ ml-text-classification-project/
 └── .gitignore
 ```
 
----
+## Project Description:
+This project performs text classification using a compression-based KNN approach instead of a neural network.
 
-## Setup & Installation
+The workflow is:
+- Load the dataset
+- Sample train and test examples
+- Compare each test text with training texts using a compression-based distance
+- Predict the class label using K-nearest neighbors
+- Print evaluation results
+- Save the results into the results folder
+In addition to the original compression-based method, this project also includes traditional machine learning baselines using TF-IDF features with:
 
-**Requirements:** Python 3.11
+-Logistic Regression
+-Naive Bayes
+-SVM
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/WadhaAlotaibi8/ml-text-classification-project.git
+## Environment:
+This project was tested using:
+- Python 3.11
+
+It is recommended to use a virtual environment.
+
+## Installation:
+1. Clone the repository
 cd ml-text-classification-project
 
-# 2. Create and activate a virtual environment
+
+2. Create and activate a virtual environment
+Windows PowerShell:
 py -3.11 -m venv .venv
 
 # Windows PowerShell
 .\.venv\Scripts\Activate.ps1
 
-# macOS / Linux
-source .venv/bin/activate
 
-# 3. Install dependencies
+3. Install dependencies
 pip install -r code/requirements.txt
+``` 
 
-# If needed, install manually:
-pip install unidecode "portalocker>=2.0.0"
-```
+If needed, install these packages manually:
+pip install unidecode
+pip install "portalocker>=2.0.0"
 
----
 
-## How to Run
+## How to Run the Code:
+Step 1: Open the project folder
 
-### Compression-based method (gzip + kNN)
+Step 2: Activate the virtual environment
 
-```bash
+Windows PowerShell:
+.\.venv\Scripts\Activate.ps1
+
+Step 3: Move to the code folder
 cd code
 
-# Default: AG_NEWS, 100 train/test per class, gzip, k=2
+Step 4: Run the code
 python main_text.py
+```
 
-# Custom dataset and sample size
+Default run:
+This uses the default settings:
+- Dataset: AG_NEWS
+- Train samples per class: 100
+- Test samples per class: 100
+- Compressor: gzip
+- K: 2
+
+Example run:
 python main_text.py --dataset AG_NEWS --num_train 100 --num_test 100 --compressor gzip --k 2
+``` 
 
-# Other datasets
-python main_text.py --dataset 20News
+Example with another dataset:
 python main_text.py --dataset kirnews --num_train 10 --num_test 10
-python main_text.py --dataset swahili
-```
 
-**Arguments:**
-| Argument | Description | Default |
-|---|---|---|
-| `--dataset` | Dataset name | `AG_NEWS` |
-| `--num_train` | Training samples per class | `100` |
-| `--num_test` | Test samples per class | `100` |
-| `--compressor` | Compressor to use (`gzip`, `zlib`, `bz2`) | `gzip` |
-| `--k` | Number of nearest neighbors | `2` |
-| `--para` | Enable parallel execution | off |
-
-### Traditional baselines (TF-IDF + LR / NB / SVM)
-
-```bash
-cd code
-
-python baseline_models.py AG_NEWS
-python baseline_models.py 20News
-python baseline_models.py kirnews
-python baseline_models.py swahili
-```
-
-Results are saved automatically to `results/`.
+Main Arguments:
+- --dataset : dataset name
+- --num_train : number of training samples per class
+- --num_test : number of testing samples per class
+- --compressor : compressor used for similarity calculation
+- --k : number of nearest neighbors
+- --data_dir : path to the dataset folder
+- --para : enables parallel execution
 
 
----
 
-## Datasets
+## Extension Added:
+Compared to the original repository, this version adds:
+- Precision
+- Recall
+- F1-score
+- Confusion Matrix
+- Classification Report
+- Saving evaluation results to a file in the results folder
+- Traditional baseline comparison using:
+    -TF-IDF + Logistic Regression
+    -TF-IDF + Naive Bayes
+    -TF-IDF + SVM
+    
 
-The following datasets were evaluated in this project:
+## Dataset Notes:
+The project structure supports multiple datasets, but some older dataset download links may fail because of outdated sources or compatibility issues.
 
-| Dataset | Type | Status |
-|---|---|---|
-| AG News | In-distribution |  Tested |
-| 20News | In-distribution |  Tested |
-| KirundiNews | Out-of-distribution (low-resource) |  Tested |
-| SwahiliNews | Out-of-distribution (low-resource) |  Tested |
-| DBpedia, YahooAnswers, Ohsumed, R8, R52, SogouNews, DengueFilipino | Various |  Loader compatibility issues |
 
-> Some datasets from the original paper could not be loaded due to outdated download links or Hugging Face caching issues.
-
----
-
-## Reference
-
-```bibtex
-@inproceedings{jiang-etal-2023-low,
-    title = {"Low-Resource" Text Classification: A Parameter-Free Classification Method with Compressors},
-    author = {Jiang, Zhiying and Yang, Matthew and Tsirlin, Mikhail and Tang, Raphael and Dai, Yiqin and Lin, Jimmy},
-    booktitle = {Findings of the Association for Computational Linguistics: ACL 2023},
-    year = {2023},
-    pages = {6810--6828}
-}
-```
-
-Original paper: https://aclanthology.org/2023.findings-acl.426/  
-Original code: https://github.com/bazingagin/npc_gzip
-
----
-
-## Authors
-
+## Authors:
 - Wadhhaa Alotaibi
 - Soukaina Alwosaibae

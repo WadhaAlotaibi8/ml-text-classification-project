@@ -1,0 +1,5 @@
+Method,Dataset,Train/Class,Test/Class,Accuracy,Precision,Recall,F1
+gzip + kNN,swahili,20,20,0.8500,0.8524,0.8500,0.8487
+TF-IDF + Logistic Regression,swahili,20,20,0.8000,0.8097,0.8000,0.7976
+TF-IDF + Naive Bayes,swahili,20,20,0.7750,0.8313,0.7750,0.7803
+TF-IDF + SVM,swahili,20,20,0.7667,0.7781,0.7667,0.7648

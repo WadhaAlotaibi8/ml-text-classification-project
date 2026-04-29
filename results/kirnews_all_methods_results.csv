@@ -1,0 +1,5 @@
+Method,Dataset,Train/Class,Test/Class,Accuracy,Precision,Recall,F1
+gzip + kNN,kirnews,3,3,0.8080,0.8256,0.8613,0.8318
+TF-IDF + Logistic Regression,kirnews,3,3,0.5429,0.4778,0.5556,0.4791
+TF-IDF + Naive Bayes,kirnews,3,3,0.5714,0.5417,0.5833,0.5278
+TF-IDF + SVM,kirnews,3,3,0.5143,0.4321,0.5278,0.4421
