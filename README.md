@@ -36,8 +36,6 @@ This project extends the original work in the following ways:
 ---
  
 ## Summary Results
- 
-## Summary
 
 | Dataset | gzip+kNN F1 | Best Baseline F1 | Best Method |
 |---------|-------------|------------------|-------------|
@@ -61,9 +59,6 @@ This project extends the original work in the following ways:
 | lzma | 0.5750 | 0.6105 | 0.5750 | 0.5757 | 38.44 |
  
 **gzip wins on every metric and is 47× faster than lzma.**
- 
-The 0.133 F1 gap between gzip and bz2 is larger than the entire gap between gzip+kNN and SVM on AG News (0.010) — the compressor is a more consequential design choice than the classification method.
- 
 ---
  
 ## Project Structure
@@ -71,15 +66,16 @@ The 0.133 F1 gap between gzip and bz2 is larger than the entire gap between gzip
 ```
 ml-text-classification-project/
 ├── code/
-│   ├── main_text.py          # gzip+kNN entry point (bug-fixed, seed, CSV save)
-│   ├── baseline_models.py    # TF-IDF baselines + comparison plot
-│   ├── experiments.py        # KnnExpText class (3 bug fixes applied)
-│   ├── compressors.py        # NCD compression (get_compressed_len_fast added)
-│   ├── data.py               # Dataset loading utilities
-│   ├── utils.py              # NCD, CLM, CDM distance functions + helpers
-│   ├── requirements.txt      # Pinned dependencies (Python 3.11)
-│   └── run_all.sh            # One command to reproduce all results
-├── results/                  # Auto-generated outputs (CSV, PNG)
+│   ├── main_text.py          
+│   ├── baseline_models.py    
+│   ├── experiments.py        
+│   ├── compressors.py        
+│   ├── data.py               
+│   ├── utils.py              
+│   ├── requirements.txt      
+│   └── data/
+│         └── datasets/
+├── results/                  
 └── README.md
 ```
  
@@ -112,11 +108,13 @@ python main_text.py --dataset 20News  --num_train 20 --num_test 100 --seed 42
 python main_text.py --dataset kirnews --seed 42
 python main_text.py --dataset swahili --num_train 20 --num_test 20 --seed 42
  
-# Compressor comparison
+```
+### Compressor comparison
+```bash
 python main_text.py --dataset AG_NEWS --compressor bz2  --num_train 20 --num_test 20
 python main_text.py --dataset AG_NEWS --compressor lzma --num_train 20 --num_test 20
 ```
- 
+
 ### Baselines
 ```bash
 cd code
