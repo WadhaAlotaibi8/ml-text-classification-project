@@ -1,153 +1,157 @@
 # ML Text Classification Project
-
-> **Based on:** "Low-Resource Text Classification: A Parameter-Free Classification Method with Compressors" (Jiang et al., ACL Findings 2023)
-
-This project reproduces the original gzip + kNN compression-based text classification method and extends it with a broader evaluation framework and traditional baseline comparisons.
-
+ 
+> **Reproducing and extending:** "Low-Resource Text Classification: A Parameter-Free Classification Method with Compressors" — Jiang et al., ACL Findings 2023  
+> **Original paper:** https://aclanthology.org/2023.findings-acl.426/  
+> **Original code:** https://github.com/bazingagin/npc_gzip
+ 
 ---
-
+ 
 ## What This Project Does
+ 
+### Core method (reproduced)
+Classifies text using **Normalized Compression Distance (NCD)** + **k-Nearest Neighbors** — no training, no vocabulary, no tokenizer.
+ 
+```
+NCD(x, y) = ( C(xy) − min(C(x), C(y)) ) / max(C(x), C(y))
+```
+ 
+A lower NCD means the two texts are more similar. After computing NCD between a test sample and all training samples, the method predicts via majority vote among the k nearest neighbours (default k=2).
+ 
+### Our three extensions
+ 
+This project extends the original work in the following ways:
 
-### Original Method
-- Computes **Normalized Compression Distance (NCD)** between texts using `gzip`
-- Classifies test examples via **k-Nearest Neighbors** (k=2 by default)
-- Requires **no training, no parameters, no tokenizer**
-
-### Our Extensions
-1. **Richer evaluation metrics** beyond accuracy:
-   - Macro-averaged Precision, Recall, F1-score
-   - Confusion Matrix
-   - Full Classification Report
-
-2. **Traditional baseline comparison** under identical train/test splits:
-   - TF-IDF + Logistic Regression
-   - TF-IDF + Naive Bayes
-   - TF-IDF + SVM
-
+- Added precision, recall, and F1-score in addition to accuracy.
+- Added confusion matrices and classification reports.
+- Added TF-IDF baseline models:
+   1. Logistic Regression
+   2. Naive Bayes
+   3. SVM
+- Compared three compressors:
+   1. gzip
+   2. bz2
+   3. lzma
+- Fixed a kNN tie-breaking issue so each test sample receives one final predicted label.
+- Saved results automatically in the results/ folder.
 ---
+ 
+## Summary Results
+ 
+## Summary
 
+| Dataset | gzip+kNN F1 | Best Baseline F1 | Best Method |
+|---------|-------------|------------------|-------------|
+| AG News | 0.6502 | 0.6604 | SVM |
+| 20News | 0.5302 | 0.5852 | SVM |
+| KirundiNews | 0.8318 | 0.5278 | gzip+kNN |
+| SwahiliNews | 0.8487 | 0.7976 | gzip+kNN |
+
+
+ 
+> **Key finding:** gzip+kNN wins decisively on low-resource non-English datasets. On English datasets, TF-IDF+SVM is slightly stronger. Choose based on language and available labelled data.
+ 
+---
+ 
+### Compressor Comparison — AG News (20 train / 20 test per class, same split)
+ 
+| Compressor | Accuracy | Precision | Recall | F1-score | Time (s) |
+|------------|----------|-----------|--------|----------|----------|
+| **gzip** | **0.7000** | **0.7009** | **0.7000** | **0.6935** | **0.82** |
+| bz2 | 0.5625 | 0.5722 | 0.5625 | 0.5603 | 1.56 |
+| lzma | 0.5750 | 0.6105 | 0.5750 | 0.5757 | 38.44 |
+ 
+**gzip wins on every metric and is 47× faster than lzma.**
+ 
+The 0.133 F1 gap between gzip and bz2 is larger than the entire gap between gzip+kNN and SVM on AG News (0.010) — the compressor is a more consequential design choice than the classification method.
+ 
+---
+ 
 ## Project Structure
-
+ 
 ```
 ml-text-classification-project/
 ├── code/
-│   ├── main_text.py          # Entry point for gzip+kNN method
-│   ├── baseline_models.py    # TF-IDF + LR / NB / SVM baselines
-│   ├── compressors.py        # NCD computation logic
+│   ├── main_text.py          # gzip+kNN entry point (bug-fixed, seed, CSV save)
+│   ├── baseline_models.py    # TF-IDF baselines + comparison plot
+│   ├── experiments.py        # KnnExpText class (3 bug fixes applied)
+│   ├── compressors.py        # NCD compression (get_compressed_len_fast added)
 │   ├── data.py               # Dataset loading utilities
-│   ├── experiments.py        # Core experiment runner
-│   ├── utils.py              # Shared helpers
-│   ├── requirements.txt
-│   └── data/
-│       └── datasets/
-├── results/                  # Saved evaluation outputs (auto-generated)
-├── README.md
-└── .gitignore
+│   ├── utils.py              # NCD, CLM, CDM distance functions + helpers
+│   ├── requirements.txt      # Pinned dependencies (Python 3.11)
+│   └── run_all.sh            # One command to reproduce all results
+├── results/                  # Auto-generated outputs (CSV, PNG)
+└── README.md
 ```
-
-## Project Description:
-This project performs text classification using a compression-based KNN approach instead of a neural network.
-
-The workflow is:
-- Load the dataset
-- Sample train and test examples
-- Compare each test text with training texts using a compression-based distance
-- Predict the class label using K-nearest neighbors
-- Print evaluation results
-- Save the results into the results folder
-In addition to the original compression-based method, this project also includes traditional machine learning baselines using TF-IDF features with:
-
--Logistic Regression
--Naive Bayes
--SVM
-
-## Environment:
-This project was tested using:
-- Python 3.11
-
-It is recommended to use a virtual environment.
-
-## Installation:
-1. Clone the repository
+ 
+---
+ 
+## Setup
+ 
+**Requires Python 3.11**
+ 
+```bash
+git clone https://github.com/WadhaAlotaibi8/ml-text-classification-project.git
 cd ml-text-classification-project
-
-
-2. Create and activate a virtual environment
-Windows PowerShell:
-py -3.11 -m venv .venv
-
-# Windows PowerShell
-.\.venv\Scripts\Activate.ps1
-
-
-3. Install dependencies
+ 
+python3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1    # Windows PowerShell
+ 
 pip install -r code/requirements.txt
-``` 
-
-If needed, install these packages manually:
-pip install unidecode
-pip install "portalocker>=2.0.0"
-
-
-## How to Run the Code:
-Step 1: Open the project folder
-
-Step 2: Activate the virtual environment
-
-Windows PowerShell:
-.\.venv\Scripts\Activate.ps1
-
-Step 3: Move to the code folder
-cd code
-
-Step 4: Run the code
-python main_text.py
 ```
-
-Default run:
-This uses the default settings:
-- Dataset: AG_NEWS
-- Train samples per class: 100
-- Test samples per class: 100
-- Compressor: gzip
-- K: 2
-
-Example run:
-python main_text.py --dataset AG_NEWS --num_train 100 --num_test 100 --compressor gzip --k 2
-``` 
-
-Example with another dataset:
-python main_text.py --dataset kirnews --num_train 10 --num_test 10
-
-Main Arguments:
-- --dataset : dataset name
-- --num_train : number of training samples per class
-- --num_test : number of testing samples per class
-- --compressor : compressor used for similarity calculation
-- --k : number of nearest neighbors
-- --data_dir : path to the dataset folder
-- --para : enables parallel execution
-
-
-
-## Extension Added:
-Compared to the original repository, this version adds:
-- Precision
-- Recall
-- F1-score
-- Confusion Matrix
-- Classification Report
-- Saving evaluation results to a file in the results folder
-- Traditional baseline comparison using:
-    -TF-IDF + Logistic Regression
-    -TF-IDF + Naive Bayes
-    -TF-IDF + SVM
-    
-
-## Dataset Notes:
-The project structure supports multiple datasets, but some older dataset download links may fail because of outdated sources or compatibility issues.
-
-
-## Authors:
-- Wadhhaa Alotaibi
+ 
+---
+ 
+## How to Run
+  
+### Individual runs — gzip + kNN
+```bash
+cd code
+ 
+python main_text.py --dataset AG_NEWS --num_train 20 --num_test 20 --seed 42
+python main_text.py --dataset 20News  --num_train 20 --num_test 100 --seed 42
+python main_text.py --dataset kirnews --seed 42
+python main_text.py --dataset swahili --num_train 20 --num_test 20 --seed 42
+ 
+# Compressor comparison
+python main_text.py --dataset AG_NEWS --compressor bz2  --num_train 20 --num_test 20
+python main_text.py --dataset AG_NEWS --compressor lzma --num_train 20 --num_test 20
+```
+ 
+### Baselines
+```bash
+cd code
+python baseline_models.py AG_NEWS 20
+python baseline_models.py 20News  20
+python baseline_models.py kirnews 3
+python baseline_models.py swahili 20
+```
+ 
+### CLI Arguments
+ 
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `--dataset` | AG_NEWS, 20News, kirnews, swahili | `AG_NEWS` |
+| `--num_train` | Training samples per class | `100` |
+| `--num_test` | Test samples per class | `100` |
+| `--compressor` | `gzip`, `bz2`, `lzma`, `zlib` | `gzip` |
+| `--k` | Number of nearest neighbours | `2` |
+| `--seed` | Random seed | `42` |
+| `--para` | Parallel mode (pathos) | off |
+| `--results_dir` | Output directory | `../results` |
+ 
+ 
+## Reference
+ 
+```bibtex
+@inproceedings{jiang-etal-2023-low,
+  title     = {"Low-Resource" Text Classification: A Parameter-Free Classification Method with Compressors},
+  author    = {Jiang, Zhiying and Yang, Matthew and Tsirlin, Mikhail and Tang, Raphael and Dai, Yiqin and Lin, Jimmy},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2023},
+  year      = {2023},
+  pages     = {6810--6828}
+}
+```
+ 
+## Authors
+- Wadhhaa Alotaibi  
 - Soukaina Alwosaibae

@@ -1,0 +1,2 @@
+method,dataset,compressor,k,n_train,n_test,accuracy,precision,recall,f1
+gzip+kNN,AG_NEWS,gzip,2,80,80,0.4750,0.4563,0.4750,0.4590
